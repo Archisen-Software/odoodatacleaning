@@ -115,7 +115,7 @@ for index, row in df.iterrows():
     
 df = df.drop(['Total', 'Invoice Status'], 1)
 df['Delivery Date'] = df['Delivery Date'].dt.strftime('%m/%d/%Y')
-df.loc[df['Type'] != 'Promo', 'Amount'] = df['Order Lines/Delivered Quantity'] * df['Order Lines/Unit Price'] - df['Order Lines/Discount (%)']
+df.loc[df['Type'] != 'Promo', 'Amount'] = df['Order Lines/Delivered Quantity'] * df['Order Lines/Unit Price'] 
 df.loc[df['Type'] == 'Promo', 'Amount'] = df['Order Lines/Unit Price']
 df['Sum of Weight'] = df['Order Lines/Delivered Quantity'] * df['Weight'] / 1000
 
