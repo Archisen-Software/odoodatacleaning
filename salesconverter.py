@@ -1,11 +1,19 @@
 import pandas as pd
 import re
 import numpy as np
-from datetime import datetime
+import datetime
+import sys
 
-input_file = 'C:\\Users\\User\\Downloads\\sale.order (15).xlsx'
+# Custom script
+sys.path.append(f"./utils")
+from fileselect import getFile
+
+input_file = getFile()
 df = pd.read_excel(input_file) 
 # print(df.head())
+
+today = datetime.datetime.now().strftime("%Y-%m-%d")
+
 
 variantdict = {'Just Mesclun: Tangy Sorrel (100g)':'Sorrel, Red-Veined|Lettuce, Green Romaine|Lettuce, Green Crystal',
     'Just Mesclun: Crunchy Classics (100g)':'Lettuce, Green Romaine|Lettuce, Green Crystal',
@@ -35,8 +43,8 @@ for key in variantdict:
         summary_data[item] = []
         product_data[item] = 0
 
-print(summary_data)
-print(product_data)
+print(f'Summary Data: {summary_data}\n++++++++++++++++++++++++++++++++++++++++++')
+print(f'Product Data: {product_data}\n++++++++++++++++++++++++++++++++++++++++++')
 
 prev_week = -1
 
@@ -72,15 +80,21 @@ for index, row in df.iterrows():
                 prev_week = week_num
                 
             # get product
-            val_list = variantdict[order_line].split("|")
-            prod_count = len(val_list)
+            try:
+                val_list = variantdict[order_line].split("|")
+                prod_count = len(val_list)
 
-            unit_weight = weight / prod_count / 1000
+                unit_weight = weight / prod_count / 1000
 
-            print(week_num, prev_date, weight, qty)
+                print(week_num, prev_date, weight, qty)
 
-            for item in val_list:
-                product_data[item] += unit_weight * qty
+                for item in val_list:
+                    product_data[item] += unit_weight * qty
+            except Exception as e:
+                f = open(f"./error_report/error_report-{today}.txt", "a")
+                f.write(f'Failed to extract data for {e}\n')
+                f.close()
+            
             
 
 if prev_week >= 0:

@@ -1,12 +1,15 @@
 import pandas as pd
 import re
 import numpy as np
+import sys
 
-input_file = 'C:\\Users\\User\\Downloads\\sale.order (13).xlsx'
+# Custom script
+sys.path.append(f"./utils")
+from fileselect import getFile
+
+input_file = getFile()
 df = pd.read_excel(input_file) 
 print(df.head())
-
-
 
 typedict = {'Just Mesclun: Tangy Sorrel (100g)':'Retail',
     'Just Mesclun: Peppery Mizuna (100g)':'Retail',
